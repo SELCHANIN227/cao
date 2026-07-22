@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+  pull-requests: write
+
 jobs:
   check-and-package:
     runs-on: ubuntu-latest
@@ -40,6 +44,16 @@ jobs:
             validation-output.txt
             validation-exit.txt
           retention-days: 2
+
+      - name: Report failed validation
+        if: github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "$(cat validation-exit.txt)" != "0" ]; then
+            printf '### A1 validation failed\n\n```text\n%s\n```\n' "$(cat validation-output.txt)" > validation-comment.md
+            gh pr comment "${{ github.event.pull_request.number }}" --body-file validation-comment.md
+          fi
 
       - name: Require successful course validation
         run: |
