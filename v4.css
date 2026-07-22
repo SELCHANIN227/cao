@@ -1,0 +1,339 @@
+.hero-actions,
+.placement-banner-actions,
+.lesson-actions,
+.phrase-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.hero-actions {
+  margin-top: 24px;
+}
+
+.hero-actions .primary-button,
+.hero-actions .secondary-button {
+  min-width: 180px;
+}
+
+.placement-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+  margin: 20px 0 28px;
+  padding: 22px 24px;
+  border: 1px solid rgba(167, 244, 50, .28);
+  border-radius: 24px;
+  background: linear-gradient(120deg, rgba(167, 244, 50, .13), rgba(98, 199, 255, .06));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .05);
+}
+
+.placement-banner-copy {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.placement-banner-copy b {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 16px;
+}
+
+.placement-banner-copy p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.placement-banner-icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 48px;
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  color: #131820;
+  background: var(--accent);
+  font-size: 24px;
+  box-shadow: 0 10px 30px rgba(167, 244, 50, .2);
+}
+
+.unit-kicker {
+  margin-bottom: 5px;
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.placement-mode-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  margin-top: 24px;
+}
+
+.placement-mode-card,
+.placement-result-card,
+.placement-note {
+  border: 1px solid var(--line);
+  border-radius: 26px;
+  background: var(--surface);
+  box-shadow: 0 18px 55px rgba(0, 0, 0, .12);
+}
+
+.placement-mode-card {
+  position: relative;
+  overflow: hidden;
+  padding: 28px;
+}
+
+.placement-mode-card.featured {
+  border-color: rgba(167, 244, 50, .35);
+  background: linear-gradient(145deg, rgba(167, 244, 50, .11), var(--surface) 55%);
+}
+
+.placement-mode-card.featured::after {
+  content: '';
+  position: absolute;
+  width: 190px;
+  height: 190px;
+  right: -80px;
+  top: -90px;
+  border-radius: 50%;
+  background: rgba(167, 244, 50, .07);
+  pointer-events: none;
+}
+
+.placement-mode-card > span,
+.placement-result-copy > span {
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.placement-mode-card h2 {
+  margin: 11px 0 8px;
+  font-size: 25px;
+}
+
+.placement-mode-card p,
+.placement-result-card p,
+.placement-note p {
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.placement-mode-card ul {
+  display: grid;
+  gap: 9px;
+  margin: 20px 0 25px;
+  padding: 0;
+  list-style: none;
+  color: var(--muted);
+}
+
+.placement-mode-card li::before {
+  content: '✓';
+  margin-right: 9px;
+  color: var(--accent);
+  font-weight: 900;
+}
+
+.mode-icon {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  margin-bottom: 18px;
+  border-radius: 17px;
+  background: var(--surface-2);
+  font-size: 26px;
+}
+
+.placement-result-card {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 22px;
+  padding: 24px;
+  margin: 22px 0;
+}
+
+.placement-result-copy h2 {
+  margin: 4px 0 3px;
+}
+
+.placement-result-copy p {
+  margin: 0;
+}
+
+.placement-level-orb {
+  display: grid;
+  place-items: center;
+  width: 76px;
+  height: 76px;
+  border-radius: 24px;
+  background: linear-gradient(145deg, var(--accent), #62c7ff);
+  color: #111820;
+  font-size: 21px;
+  font-weight: 900;
+  box-shadow: 0 14px 38px rgba(98, 199, 255, .18);
+}
+
+.placement-level-orb.large {
+  width: 96px;
+  height: 96px;
+  margin: 0 auto 16px;
+  border-radius: 31px;
+  font-size: 27px;
+}
+
+.placement-note {
+  margin-top: 20px;
+  padding: 22px 24px;
+}
+
+.placement-note p {
+  margin: 4px 0 8px;
+}
+
+.grammar-note-card {
+  display: grid;
+  gap: 12px;
+  max-width: 720px;
+  margin: 25px auto;
+}
+
+.grammar-note-card > div {
+  display: grid;
+  grid-template-columns: 38px 1fr;
+  align-items: start;
+  gap: 13px;
+  padding: 17px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--surface);
+}
+
+.grammar-note-card span {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 12px;
+  color: #121820;
+  background: var(--accent);
+  font-weight: 900;
+}
+
+.grammar-note-card p {
+  margin: 4px 0 0;
+  color: var(--text);
+  line-height: 1.55;
+}
+
+.phrase-title-row {
+  justify-content: center;
+  flex-wrap: nowrap;
+}
+
+.phrase-title-row h2 {
+  margin: 0;
+}
+
+.placement-finish {
+  max-width: 720px;
+}
+
+.placement-finish .lesson-actions {
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.placement-finish > p {
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.unit-card.locked {
+  opacity: .47;
+}
+
+.unit-card:not(.locked) {
+  transition: transform .2s ease, border-color .2s ease;
+}
+
+.unit-card:not(.locked):hover {
+  transform: translateY(-2px);
+  border-color: rgba(167, 244, 50, .2);
+}
+
+@media (max-width: 900px) {
+  .placement-mode-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .placement-result-card {
+    grid-template-columns: auto 1fr;
+  }
+
+  .placement-result-card .primary-button {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+}
+
+@media (max-width: 680px) {
+  .hero-actions,
+  .placement-banner-actions,
+  .lesson-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+
+  .hero-actions button,
+  .placement-banner-actions button,
+  .lesson-actions button {
+    width: 100%;
+  }
+
+  .placement-banner {
+    align-items: stretch;
+    flex-direction: column;
+    padding: 19px;
+  }
+
+  .placement-banner-copy {
+    align-items: flex-start;
+  }
+
+  .placement-mode-card {
+    padding: 22px;
+  }
+
+  .placement-result-card {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .placement-level-orb {
+    margin: 0 auto;
+  }
+
+  .phrase-title-row {
+    align-items: flex-start;
+  }
+
+  .phrase-title-row .tiny-button {
+    flex: 0 0 auto;
+  }
+}
