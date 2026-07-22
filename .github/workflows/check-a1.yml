@@ -27,13 +27,11 @@ jobs:
           node --check tests/check-a1.js
 
       - name: Run course validation
-        id: course_validation
         shell: bash
         run: |
           set +e
           node tests/check-a1.js > validation-output.txt 2>&1
-          code=$?
-          echo "$code" > validation-exit.txt
+          echo "$?" > validation-exit.txt
           cat validation-output.txt
           exit 0
 
@@ -46,7 +44,7 @@ jobs:
             validation-exit.txt
           retention-days: 2
 
-      - name: Report failed validation
+      - name: Report failed course validation
         if: github.event_name == 'pull_request'
         env:
           GH_TOKEN: ${{ github.token }}
@@ -57,16 +55,34 @@ jobs:
           fi
 
       - name: Require successful course validation
-        run: |
-          test "$(cat validation-exit.txt)" = "0" || exit 1
+        run: test "$(cat validation-exit.txt)" = "0"
 
-      - name: Validate merged audio manifest builder
+      - name: Run audio manifest validation
         shell: pwsh
         run: |
-          ./tools/build-audio-manifest.ps1 -Root $PWD
-          $manifest = Get-Content ./audio-manifest.json -Raw | ConvertFrom-Json
-          if ($manifest.version -ne 4) { throw 'Audio manifest version is not 4' }
-          if ($manifest.texts.PSObject.Properties.Count -lt 650) { throw 'Audio manifest is unexpectedly small' }
+          try {
+            ./tools/build-audio-manifest.ps1 -Root $PWD *>&1 | Tee-Object -FilePath audio-validation-output.txt
+            $manifest = Get-Content ./audio-manifest.json -Raw | ConvertFrom-Json
+            if ($manifest.version -ne 4) { throw 'Audio manifest version is not 4' }
+            if ($manifest.texts.PSObject.Properties.Count -lt 650) { throw 'Audio manifest is unexpectedly small' }
+            '0' | Set-Content audio-validation-exit.txt
+          } catch {
+            ($_ | Out-String) | Tee-Object -FilePath audio-validation-output.txt -Append
+            '1' | Set-Content audio-validation-exit.txt
+          }
+
+      - name: Report failed audio validation
+        if: github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "$(tr -d '\r\n ' < audio-validation-exit.txt)" != "0" ]; then
+            printf '### Audio manifest validation failed\n\n```text\n%s\n```\n' "$(cat audio-validation-output.txt)" > audio-comment.md
+            gh pr comment "${{ github.event.pull_request.number }}" --body-file audio-comment.md
+          fi
+
+      - name: Require successful audio validation
+        run: test "$(tr -d '\r\n ' < audio-validation-exit.txt)" = "0"
 
       - name: Package static site
         run: |
