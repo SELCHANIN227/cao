@@ -11,6 +11,7 @@ on:
 
 permissions:
   contents: read
+  pull-requests: write
 
 jobs:
   build:
@@ -30,7 +31,24 @@ jobs:
         run: python -m pip install --upgrade pip edge-tts
 
       - name: Build deterministic audio package
-        run: python tools/build_v34.py
+        run: |
+          set -o pipefail
+          python tools/build_v34.py 2>&1 | tee build.log
+
+      - name: Report build failure
+        if: failure() && github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          {
+            echo '### v3.4 build failed'
+            echo
+            echo '```text'
+            tail -n 100 build.log 2>/dev/null || echo 'build.log was not created'
+            echo '```'
+          } > build-comment.md
+          gh pr comment "$PR_NUMBER" --body-file build-comment.md
 
       - name: Verify package
         run: |
