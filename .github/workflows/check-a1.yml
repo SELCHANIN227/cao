@@ -1,0 +1,108 @@
+name: Check and package A1 course
+
+on:
+  push:
+    branches: [main, a1-complete-course]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  check-and-package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check JavaScript syntax
+        run: |
+          node --check course-a1.js
+          node --check app-v4-base.js
+          node --check app-v4-normalize.js
+          node --check app-v4-render.js
+          node --check app-v4-lessons.js
+          node --check tests/check-a1.js
+          node --check tests/smoke-browser.mjs
+
+      - name: Run course validation
+        shell: bash
+        run: |
+          set +e
+          node tests/check-a1.js > validation-output.txt 2>&1
+          echo "$?" > validation-exit.txt
+          cat validation-output.txt
+          exit 0
+
+      - name: Upload validation diagnostics
+        uses: actions/upload-artifact@v4
+        with:
+          name: a1-validation-output
+          path: |
+            validation-output.txt
+            validation-exit.txt
+          retention-days: 2
+
+      - name: Report failed course validation
+        if: github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "$(cat validation-exit.txt)" != "0" ]; then
+            printf '### A1 validation failed\n\n```text\n%s\n```\n' "$(cat validation-output.txt)" > validation-comment.md
+            gh pr comment "${{ github.event.pull_request.number }}" --body-file validation-comment.md
+          fi
+
+      - name: Require successful course validation
+        run: test "$(cat validation-exit.txt)" = "0"
+
+      - name: Run browser smoke test
+        run: |
+          npm install --no-save --no-package-lock happy-dom@20
+          node tests/smoke-browser.mjs
+
+      - name: Run audio manifest validation
+        shell: pwsh
+        run: |
+          try {
+            ./tools/build-audio-manifest.ps1 -Root $PWD *>&1 | Tee-Object -FilePath audio-validation-output.txt
+            $manifest = Get-Content ./audio-manifest.json -Raw | ConvertFrom-Json
+            $audioCount = @($manifest.texts.PSObject.Properties).Count
+            if ($manifest.version -ne 4) { throw 'Audio manifest version is not 4' }
+            if ($audioCount -lt 650) { throw "Audio manifest is unexpectedly small: $audioCount" }
+            '0' | Set-Content audio-validation-exit.txt
+          } catch {
+            ($_ | Out-String) | Tee-Object -FilePath audio-validation-output.txt -Append
+            '1' | Set-Content audio-validation-exit.txt
+          }
+
+      - name: Report failed audio validation
+        if: github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "$(tr -d '\r\n ' < audio-validation-exit.txt)" != "0" ]; then
+            printf '### Audio manifest validation failed\n\n```text\n%s\n```\n' "$(cat audio-validation-output.txt)" > audio-comment.md
+            gh pr comment "${{ github.event.pull_request.number }}" --body-file audio-comment.md
+          fi
+
+      - name: Require successful audio validation
+        run: test "$(tr -d '\r\n ' < audio-validation-exit.txt)" = "0"
+
+      - name: Package static site
+        run: |
+          mkdir -p dist/cao-serbian-a1
+          cp index.html styles.css v4.css audio-manifest.js audio-manifest.json course-a1.js app-v4-base.js app-v4-normalize.js app-v4-render.js app-v4-lessons.js README.md generate-only-missing-audio.bat dist/cao-serbian-a1/
+          cp -R tools dist/cao-serbian-a1/tools
+          if [ -d assets ]; then cp -R assets dist/cao-serbian-a1/assets; fi
+          cd dist
+          zip -r cao-serbian-a1.zip cao-serbian-a1
+
+      - name: Upload ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: cao-serbian-a1
+          path: dist/cao-serbian-a1.zip
+          retention-days: 14

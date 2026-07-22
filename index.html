@@ -4,12 +4,13 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="theme-color" content="#151823" />
-  <title>Ćao! — сербский через короткие уроки</title>
-  <meta name="description" content="Игровой тренажёр сербского языка: уроки, повторение слов, серии, XP и озвучка." />
+  <title>Ćao! — полный курс сербского A1</title>
+  <meta name="description" content="Игровой курс сербского A1: алфавит, слова, грамматика, тест уровня, повторение и озвучка." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="v4.css" />
 </head>
 <body>
   <div id="app" class="app-shell">
@@ -20,6 +21,7 @@
       </a>
       <nav class="side-nav">
         <button class="nav-item active" data-screen-link="learn"><span class="nav-ico">⌂</span><span>Учиться</span></button>
+        <button class="nav-item" data-screen-link="placement"><span class="nav-ico">◎</span><span>Тест уровня</span></button>
         <button class="nav-item" data-screen-link="review"><span class="nav-ico">↻</span><span>Повторение</span><span id="reviewBadge" class="nav-badge hidden">0</span></button>
         <button class="nav-item" data-screen-link="words"><span class="nav-ico">Aa</span><span>Словарь</span></button>
         <button class="nav-item" data-screen-link="profile"><span class="nav-ico">☺</span><span>Профиль</span></button>
@@ -42,6 +44,7 @@
       </header>
 
       <section id="screen-learn" class="screen active"></section>
+      <section id="screen-placement" class="screen"></section>
       <section id="screen-review" class="screen"></section>
       <section id="screen-words" class="screen"></section>
       <section id="screen-profile" class="screen"></section>
@@ -69,9 +72,9 @@
     </aside>
   </div>
 
-  <div id="lessonOverlay" class="lesson-overlay hidden" role="dialog" aria-modal="true" aria-label="Урок">
+  <div id="lessonOverlay" class="lesson-overlay hidden" role="dialog" aria-modal="true" aria-label="Урок или тест">
     <div class="lesson-top">
-      <button id="closeLesson" class="icon-button" aria-label="Закрыть урок">×</button>
+      <button id="closeLesson" class="icon-button" aria-label="Закрыть">×</button>
       <div class="lesson-progress"><span id="lessonProgressBar"></span></div>
       <div class="lesson-hearts">♥ <b id="lessonHearts">5</b></div>
     </div>
@@ -82,6 +85,10 @@
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
   <script src="audio-manifest.js"></script>
-  <script src="app.js"></script>
+  <script src="course-a1.js"></script>
+  <script src="app-v4-base.js"></script>
+  <script src="app-v4-normalize.js"></script>
+  <script src="app-v4-render.js"></script>
+  <script src="app-v4-lessons.js"></script>
 </body>
 </html>
