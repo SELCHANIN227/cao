@@ -63,8 +63,9 @@ jobs:
           try {
             ./tools/build-audio-manifest.ps1 -Root $PWD *>&1 | Tee-Object -FilePath audio-validation-output.txt
             $manifest = Get-Content ./audio-manifest.json -Raw | ConvertFrom-Json
+            $audioCount = @($manifest.texts.PSObject.Properties).Count
             if ($manifest.version -ne 4) { throw 'Audio manifest version is not 4' }
-            if ($manifest.texts.PSObject.Properties.Count -lt 650) { throw 'Audio manifest is unexpectedly small' }
+            if ($audioCount -lt 650) { throw "Audio manifest is unexpectedly small: $audioCount" }
             '0' | Set-Content audio-validation-exit.txt
           } catch {
             ($_ | Out-String) | Tee-Object -FilePath audio-validation-output.txt -Append
