@@ -21,6 +21,7 @@ jobs:
         run: |
           node --check course-a1.js
           node --check app-v4-base.js
+          node --check app-v4-normalize.js
           node --check app-v4-render.js
           node --check app-v4-lessons.js
           node --check tests/check-a1.js
@@ -70,7 +71,7 @@ jobs:
       - name: Package static site
         run: |
           mkdir -p dist/cao-serbian-a1
-          cp index.html styles.css v4.css audio-manifest.js audio-manifest.json course-a1.js app-v4-base.js app-v4-render.js app-v4-lessons.js README.md generate-only-missing-audio.bat dist/cao-serbian-a1/
+          cp index.html styles.css v4.css audio-manifest.js audio-manifest.json course-a1.js app-v4-base.js app-v4-normalize.js app-v4-render.js app-v4-lessons.js README.md generate-only-missing-audio.bat dist/cao-serbian-a1/
           cp -R tools dist/cao-serbian-a1/tools
           if [ -d assets ]; then cp -R assets dist/cao-serbian-a1/assets; fi
           cd dist
