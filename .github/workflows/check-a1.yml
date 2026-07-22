@@ -21,8 +21,29 @@ jobs:
           node --check app-v4-lessons.js
           node --check tests/check-a1.js
 
-      - name: Validate course data and tests
-        run: node tests/check-a1.js
+      - name: Run course validation
+        id: course_validation
+        shell: bash
+        run: |
+          set +e
+          node tests/check-a1.js > validation-output.txt 2>&1
+          code=$?
+          echo "$code" > validation-exit.txt
+          cat validation-output.txt
+          exit 0
+
+      - name: Upload validation diagnostics
+        uses: actions/upload-artifact@v4
+        with:
+          name: a1-validation-output
+          path: |
+            validation-output.txt
+            validation-exit.txt
+          retention-days: 2
+
+      - name: Require successful course validation
+        run: |
+          test "$(cat validation-exit.txt)" = "0" || exit 1
 
       - name: Validate merged audio manifest builder
         shell: pwsh
