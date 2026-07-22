@@ -1,0 +1,81 @@
+name: Build Ćao v3.4 audio fix
+
+on:
+  push:
+    branches:
+      - v3.4-audio-sync-fix
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install TTS generator
+        run: python -m pip install --upgrade pip edge-tts
+
+      - name: Apply alphabet pronunciation hotfix
+        run: python tools/hotfix_v34_letters.py
+
+      - name: Build deterministic audio package
+        run: |
+          set -o pipefail
+          python tools/build_v34.py 2>&1 | tee build.log
+
+      - name: Report build failure
+        if: failure() && github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          {
+            echo '### v3.4 build failed'
+            echo
+            echo '```text'
+            tail -n 100 build.log 2>/dev/null || echo 'build.log was not created'
+            echo '```'
+          } > build-comment.md
+          gh pr comment "$PR_NUMBER" --body-file build-comment.md
+
+      - name: Verify package
+        run: |
+          python - <<'PY'
+          import zipfile
+          from pathlib import Path
+
+          package = Path('dist/cao-serbian-v3.4-audio-sync-fix.zip')
+          assert package.exists() and package.stat().st_size > 1_000_000
+          with zipfile.ZipFile(package) as z:
+              names = set(z.namelist())
+              assert 'app.js' in names
+              assert 'audio-manifest.js' in names
+              assert any(name.startswith('assets/audio/nikola-v2/') and name.endswith('.mp3') for name in names)
+              assert 'assets/audio/nikola-v2/audio-index.json' in names
+              assert not any(name.startswith('assets/audio/srecko/') for name in names)
+          print('Package verification passed:', package.stat().st_size, 'bytes')
+          PY
+
+      - name: Upload ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: cao-serbian-v3.4-audio-sync-fix
+          path: dist/cao-serbian-v3.4-audio-sync-fix.zip
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 30
