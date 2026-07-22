@@ -29,6 +29,7 @@ function run(file) {
 
 run('course-a1.js');
 run('app-v4-base.js');
+run('app-v4-normalize.js');
 run('app-v4-render.js');
 run('app-v4-lessons.js');
 
