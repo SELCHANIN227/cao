@@ -16,9 +16,10 @@ if (-not (Test-Path $generator)) {
 & $builder -Root $Root
 $fullJson = Get-Content $jsonPath -Raw -Encoding UTF8
 $fullManifest = $fullJson | ConvertFrom-Json
+$allProperties = @($fullManifest.texts.PSObject.Properties)
 $missingTexts = [ordered]@{}
 
-foreach ($property in $fullManifest.texts.PSObject.Properties) {
+foreach ($property in $allProperties) {
   $text = [string]$property.Name
   $key = [string]$property.Value
   $femalePath = Join-Path $Root ("assets\audio\gabrijela\{0}.mp3" -f $key)
@@ -36,7 +37,7 @@ if ($missingTexts.Count -eq 0) {
   exit 0
 }
 
-Write-Host ("Existing recordings are preserved. Missing entries: {0} of {1}." -f $missingTexts.Count, $fullManifest.texts.PSObject.Properties.Count) -ForegroundColor Cyan
+Write-Host ("Existing recordings are preserved. Missing entries: {0} of {1}." -f $missingTexts.Count, $allProperties.Count) -ForegroundColor Cyan
 
 $tempManifest = [ordered]@{
   version = 4
@@ -76,7 +77,7 @@ try {
 }
 
 $stillMissing = 0
-foreach ($property in $fullManifest.texts.PSObject.Properties) {
+foreach ($property in $allProperties) {
   $key = [string]$property.Value
   $femalePath = Join-Path $Root ("assets\audio\gabrijela\{0}.mp3" -f $key)
   $malePath = Join-Path $Root ("assets\audio\srecko\{0}.mp3" -f $key)
