@@ -25,6 +25,7 @@ jobs:
           node --check app-v4-render.js
           node --check app-v4-lessons.js
           node --check tests/check-a1.js
+          node --check tests/smoke-browser.mjs
 
       - name: Run course validation
         shell: bash
@@ -56,6 +57,11 @@ jobs:
 
       - name: Require successful course validation
         run: test "$(cat validation-exit.txt)" = "0"
+
+      - name: Run browser smoke test
+        run: |
+          npm install --no-save --no-package-lock happy-dom@20
+          node tests/smoke-browser.mjs
 
       - name: Run audio manifest validation
         shell: pwsh
