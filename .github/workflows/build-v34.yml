@@ -30,6 +30,9 @@ jobs:
       - name: Install TTS generator
         run: python -m pip install --upgrade pip edge-tts
 
+      - name: Apply alphabet pronunciation hotfix
+        run: python tools/hotfix_v34_letters.py
+
       - name: Build deterministic audio package
         run: |
           set -o pipefail
