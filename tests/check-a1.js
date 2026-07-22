@@ -44,7 +44,9 @@ assert(api.words.length >= 650, `Expected at least 650 A1 entries, got ${api.wor
 assert(api.DATA.placement.questions.length === 24, 'Full placement test must contain 24 questions');
 
 const ids = api.words.map(word => word.id);
-assert(new Set(ids).size === ids.length, 'Word IDs must be unique');
+const counts = ids.reduce((map, id) => map.set(id, (map.get(id) || 0) + 1), new Map());
+const duplicateIds = [...counts.entries()].filter(([, count]) => count > 1).map(([id, count]) => `${id}×${count}`);
+assert(duplicateIds.length === 0, `Word IDs must be unique. Duplicates: ${duplicateIds.join(', ')}`);
 assert(api.units.every(unit => Number.isInteger(unit.lessons) && unit.lessons > 0), 'Every unit must contain lessons');
 
 const wordIds = new Set(ids);
