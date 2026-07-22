@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - v3.4-audio-sync-fix
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
@@ -33,7 +36,6 @@ jobs:
       - name: Verify package
         run: |
           python - <<'PY'
-          import json
           import zipfile
           from pathlib import Path
 
