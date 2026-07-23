@@ -1,0 +1,28 @@
+name: Build Timeweb archive
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/build-timeweb-archive.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build upload-ready ZIP
+        run: |
+          rm -rf .git .github
+          zip -r cao-serbian-whisper-timeweb.zip . -x 'cao-serbian-whisper-timeweb.zip'
+      - name: Upload archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: cao-serbian-whisper-timeweb
+          path: cao-serbian-whisper-timeweb.zip
+          retention-days: 7
