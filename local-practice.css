@@ -1,0 +1,23 @@
+.local-practice-card{width:min(760px,100%);margin:auto;padding:30px;border:1px solid var(--line);border-radius:28px;background:linear-gradient(145deg,rgba(98,199,255,.07),rgba(167,244,50,.05)),var(--surface);box-shadow:var(--shadow)}
+.local-target-phrase{font-size:clamp(34px,7vw,62px)!important;line-height:1.08;text-align:center;margin-top:20px!important}
+.local-example-listen{display:block;margin:18px auto 22px;border:1px solid var(--line);background:var(--surface-2);color:var(--text);padding:11px 16px;border-radius:14px;font-weight:800;cursor:pointer}
+.local-example-listen:hover{border-color:rgba(167,244,50,.55)}
+.local-mic-button{width:min(290px,82vw);aspect-ratio:1;border:0;border-radius:50%;margin:10px auto 18px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:radial-gradient(circle at 36% 28%,#cfff77,var(--accent) 54%,#79be18);color:#111;box-shadow:0 0 0 12px rgba(167,244,50,.08),0 28px 65px rgba(0,0,0,.34);cursor:pointer;transition:.2s}
+.local-mic-button:hover{transform:translateY(-3px) scale(1.01)}
+.local-mic-button:disabled{cursor:wait;opacity:.88}
+.local-mic-button.is-recording{animation:localPulse 1.15s ease-in-out infinite;background:radial-gradient(circle at 36% 28%,#ffb2bd,var(--red) 58%,#cb4354)}
+.local-mic-icon{font-size:42px;line-height:1}.local-mic-button b{font-size:25px}.local-mic-button small{max-width:180px;font-size:11px;line-height:1.35;opacity:.7;text-align:center}
+.local-speech-status{min-height:23px;text-align:center;color:var(--muted);font-size:13px;line-height:1.5}
+.local-model-progress{height:8px;background:var(--surface-3);border-radius:999px;overflow:hidden;margin:10px auto 18px;max-width:430px}.local-model-progress span{display:block;width:0;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--blue),var(--accent));transition:width .18s ease}
+.local-listen-button{width:min(360px,100%);min-height:120px;margin:24px auto;display:flex;align-items:center;justify-content:center;gap:16px;border:1px solid rgba(98,199,255,.25);border-radius:24px;background:linear-gradient(135deg,rgba(98,199,255,.13),rgba(169,140,255,.08)),var(--surface-2);cursor:pointer;color:var(--text);transition:.2s}
+.local-listen-button:hover{transform:translateY(-2px);border-color:rgba(98,199,255,.5)}.local-listen-button span{font-size:38px}.local-listen-button b{font-size:18px}
+.local-dictation-input{display:block;width:100%;max-width:620px;margin:0 auto 12px;font-size:18px!important;min-height:58px}
+.local-actions{justify-content:center;flex-wrap:wrap;margin-top:20px}.local-actions .secondary-button,.local-actions .primary-button{min-width:180px}
+.local-result{display:grid;grid-template-columns:48px 1fr;gap:14px;align-items:start;margin:22px auto 14px;padding:16px 18px;max-width:620px;border-radius:18px;border:1px solid var(--line);background:var(--surface-2)}
+.local-result.is-correct{border-color:rgba(167,244,50,.38);background:rgba(167,244,50,.08)}.local-result.is-wrong{border-color:rgba(255,111,125,.38);background:rgba(255,111,125,.07)}
+.local-result-icon{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;font-size:22px;font-weight:900;background:var(--surface-3)}.local-result.is-correct .local-result-icon{background:var(--accent);color:#111}.local-result.is-wrong .local-result-icon{background:var(--red);color:#fff}
+.local-result b{display:block;margin:1px 0 5px;font-size:17px}.local-result p{margin:0;color:#c4c9d8;line-height:1.5}.local-result small{display:block;margin-top:7px;color:var(--muted);line-height:1.45}
+.local-wide-button{display:block;margin:14px auto 0;min-width:220px}.local-shake{animation:localShake .32s ease}
+@keyframes localPulse{0%,100%{box-shadow:0 0 0 12px rgba(255,111,125,.08),0 28px 65px rgba(0,0,0,.34)}50%{box-shadow:0 0 0 23px rgba(255,111,125,.03),0 28px 65px rgba(0,0,0,.34)}}
+@keyframes localShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+@media(max-width:700px){.local-practice-card{padding:22px 17px;border-radius:22px}.local-target-phrase{font-size:36px!important}.local-mic-button{width:min(235px,72vw)}.local-mic-button b{font-size:22px}.local-listen-button{min-height:100px}.local-actions{display:grid!important;grid-template-columns:1fr}.local-actions .secondary-button,.local-actions .primary-button{width:100%;min-width:0}.local-result{grid-template-columns:42px 1fr;padding:14px}.local-wide-button{width:100%}}
